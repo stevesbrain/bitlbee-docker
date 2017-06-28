@@ -1,5 +1,5 @@
 bitlbee:
-  image: 'bitlbee-dev'
+  image: 'bitlbee'
   restart: always
 
   ports:
