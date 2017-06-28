@@ -1,0 +1,9 @@
+bitlbee:
+  image: 'bitlbee-dev'
+  restart: always
+
+  ports:
+    - '6667:6667'
+  volumes:
+    - '/opt/dockerdata/bitlbee:/bitlbee-data'
+    - '/etc/localtime:/etc/localtime:ro'
