@@ -22,6 +22,7 @@ RUN set -x \
 	libtool \
 	json-glib \
 	json-glib-dev \
+	file \
     && mkdir /bitlbee-src && cd /bitlbee-src \
     && curl -fsSL "http://get.bitlbee.org/src/bitlbee-${BITLBEE_VERSION}.tar.gz" -o bitlbee.tar.gz \
     && tar -zxf bitlbee.tar.gz --strip-components=1 \
@@ -37,7 +38,13 @@ RUN set -x \
     && ./autogen.sh \
     && make \
     && make install \
-    && rm -rf  /root/bitlbee-facebook \
+    && cd /root \
+    && git clone https://github.com/sm00th/bitlbee-discord \
+    && cd /root/bitlbee-discord \
+    && ./autogen.sh \
+    && ./configure \
+    && make \
+    && make install \
     && apk del --purge build-dependencies \
 	autoconf \
 	automake \
@@ -47,8 +54,10 @@ RUN set -x \
 	libgcrypt-dev \
 	glib-dev \
 	gnutls-dev \
+	file \
     && rm -rf /bitlbee-src \
     && rm -rf /root/bitlbee-facebook \
+    && rm -rf /root/bitlbee-discord \
     && rm -rf /src; exit 0
 
 
