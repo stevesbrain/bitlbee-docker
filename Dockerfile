@@ -6,6 +6,7 @@ LABEL build_version="stevesbrain version:- ${VERSION} Build-date:- ${BUILD_DATE}
 ARG CONFIGUREFLAGS="--config=/bitlbee-data"
 
 ENV BITLBEE_VERSION 3.5.1
+ENV FACEBOOK_COMMIT cdc41b6
 
 # Build Bitlbee and plugins
 RUN set -x \
