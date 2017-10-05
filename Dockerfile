@@ -7,7 +7,7 @@ ARG CONFIGUREFLAGS="--config=/bitlbee-data"
 
 ENV BITLBEE_VERSION 3.5.1
 ENV FACEBOOK_COMMIT bc52372
-ENV DISCORD_COMMIT fcb733f
+ENV DISCORD_COMMIT 18bcf33
 
 # Build Bitlbee and plugins
 RUN set -x \
