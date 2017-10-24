@@ -6,7 +6,7 @@ LABEL build_version="stevesbrain version:- ${VERSION} Build-date:- ${BUILD_DATE}
 ARG CONFIGUREFLAGS="--config=/bitlbee-data"
 
 ENV BITLBEE_VERSION 3.5.1
-ENV FACEBOOK_COMMIT bc52372
+ENV FACEBOOK_COMMIT 553593d
 ENV DISCORD_COMMIT 18bcf33
 
 # Build Bitlbee and plugins
@@ -70,6 +70,7 @@ RUN addgroup -g 1000 -S bitlbee
 
 #Change ownership as needed
 RUN chown -R bitlbee:bitlbee /bitlbee-data
+RUN touch /var/run/bitlbee.pid && chown bitlbee:bitlbee /var/run/bitlbee.pid
 #The user that we enter the container as, and that everything runs as
 USER bitlbee
 VOLUME /bitlbee-data
