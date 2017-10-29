@@ -8,6 +8,7 @@ ARG CONFIGUREFLAGS="--config=/bitlbee-data"
 ENV BITLBEE_VERSION 3.5.1
 ENV FACEBOOK_COMMIT 553593d
 ENV DISCORD_COMMIT 18bcf33
+ENV TELEGRAM_COMMIT 94dd3be
 
 # Build Bitlbee and plugins
 RUN set -x \
@@ -25,6 +26,7 @@ RUN set -x \
 	json-glib \
 	json-glib-dev \
 	file \
+	libpurple \
     && mkdir /bitlbee-src && cd /bitlbee-src \
     && curl -fsSL "http://get.bitlbee.org/src/bitlbee-${BITLBEE_VERSION}.tar.gz" -o bitlbee.tar.gz \
     && tar -zxf bitlbee.tar.gz --strip-components=1 \
@@ -46,6 +48,15 @@ RUN set -x \
     && ./autogen.sh \
     && ./configure \
     && make \
+    && make install
+RUN set -x \
+    && cd /root \
+    && git clone --recursive https://github.com/majn/telegram-purple
+RUN set -x \
+    && cd /root/telegram-purple \
+    && apk add --no-cache --virtual finch \
+    && ./configure \
+    && make \
     && make install \
     && apk del --purge build-dependencies \
 	autoconf \
@@ -60,6 +71,7 @@ RUN set -x \
     && rm -rf /bitlbee-src \
     && rm -rf /root/bitlbee-facebook \
     && rm -rf /root/bitlbee-discord \
+    && rm -rf /root/telegram-purple \
     && rm -rf /src; exit 0
 
 
