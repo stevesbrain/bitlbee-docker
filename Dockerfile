@@ -3,7 +3,7 @@ MAINTAINER Stevesbrain
 ARG BUILD_DATE
 ARG VERSION
 LABEL build_version="stevesbrain version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-ARG CONFIGUREFLAGS="--config=/bitlbee-data"
+ARG CONFIGUREFLAGS="--purple=1 --config=/bitlbee-data"
 
 ENV BITLBEE_VERSION 3.5.1
 ENV FACEBOOK_COMMIT 553593d
@@ -27,6 +27,8 @@ RUN set -x \
 	json-glib-dev \
 	file \
 	libpurple \
+	pidgin-dev \
+	libwebp-dev \
     && mkdir /bitlbee-src && cd /bitlbee-src \
     && curl -fsSL "http://get.bitlbee.org/src/bitlbee-${BITLBEE_VERSION}.tar.gz" -o bitlbee.tar.gz \
     && tar -zxf bitlbee.tar.gz --strip-components=1 \
@@ -68,6 +70,8 @@ RUN set -x \
 	glib-dev \
 	gnutls-dev \
 	file \
+	pidgin-dev \
+	libwebp-dev \
     && rm -rf /bitlbee-src \
     && rm -rf /root/bitlbee-facebook \
     && rm -rf /root/bitlbee-discord \
@@ -87,4 +91,4 @@ RUN touch /var/run/bitlbee.pid && chown bitlbee:bitlbee /var/run/bitlbee.pid
 USER bitlbee
 VOLUME /bitlbee-data
 ENV BUILD 0.3.0
-ENTRYPOINT ["/usr/local/sbin/bitlbee", "-D", "-n", "-d", "/bitlbee-data"]
+ENTRYPOINT ["/usr/local/sbin/bitlbee", "-F", "-n", "-d", "/bitlbee-data"]
