@@ -50,13 +50,10 @@ RUN set -x \
     && ./autogen.sh \
     && ./configure \
     && make \
-    && make install
-RUN set -x \
+    && make install \
     && cd /root \
-    && git clone --recursive https://github.com/majn/telegram-purple
-RUN set -x \
+    && git clone --recursive https://github.com/majn/telegram-purple \
     && cd /root/telegram-purple \
-    && apk add --no-cache --virtual finch \
     && ./configure \
     && make \
     && make install \
