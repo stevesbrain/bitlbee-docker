@@ -75,16 +75,15 @@ RUN set -x \
     && rm -rf /root/telegram-purple \
     && rm -rf /src; exit 0
 
-
 # Add our users for BitlBee
 RUN adduser -u 1000 -S bitlbee
 RUN addgroup -g 1000 -S bitlbee
 
-
-#Change ownership as needed
+# Change ownership as needed
 RUN chown -R bitlbee:bitlbee /bitlbee-data
 RUN touch /var/run/bitlbee.pid && chown bitlbee:bitlbee /var/run/bitlbee.pid
-#The user that we enter the container as, and that everything runs as
+
+# The user that we enter the container as, and that everything runs as
 USER bitlbee
 VOLUME /bitlbee-data
 ENV BUILD 0.3.0
