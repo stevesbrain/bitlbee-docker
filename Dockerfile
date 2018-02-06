@@ -10,7 +10,7 @@ ENV FACEBOOK_COMMIT 553593d
 ENV DISCORD_COMMIT 549b05a
 ENV TELEGRAM_COMMIT 94dd3be
 
-# Build Bitlbee and plugins
+# Build BitlBee and plugins
 RUN set -x \
     && apk add --no-cache --virtual runtime-dependencies \
         ca-certificates \
@@ -76,7 +76,7 @@ RUN set -x \
     && rm -rf /src; exit 0
 
 
-# Add our users for ZNC
+# Add our users for BitlBee
 RUN adduser -u 1000 -S bitlbee
 RUN addgroup -g 1000 -S bitlbee
 
