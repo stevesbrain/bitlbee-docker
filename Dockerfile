@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:latest
 MAINTAINER Stevesbrain
 ARG BUILD_DATE
 ARG VERSION
@@ -7,29 +7,30 @@ ARG CONFIGUREFLAGS="--purple=1 --config=/bitlbee-data"
 
 ENV BITLBEE_VERSION 3.5.1
 ENV FACEBOOK_COMMIT 553593d
-ENV DISCORD_COMMIT 549b05a
+ENV DISCORD_COMMIT 0a84f9d
 ENV TELEGRAM_COMMIT 94dd3be
+ENV SKYPE_COMMIT c442007
 
-# Build Bitlbee and plugins
+# Build BitlBee and plugins
 RUN set -x \
-    && apk add --no-cache --virtual runtime-dependencies \
-        ca-certificates \
-	gnutls-dev \
+    && apk update \
+    && apk upgrade \
+    && apk add --virtual build-dependencies \
+	curl \
+	build-base \
 	git \
-        build-base \
-        curl \
-	glib-dev \
-	libgcrypt-dev \
 	autoconf \
 	automake \
 	libtool \
-	json-glib \
+    && apk add --virtual runtime-dependencies \
 	json-glib-dev \
-	file \
-	libpurple \
+	libgcrypt-dev \
+	gnutls-dev \
+	glib-dev \
 	pidgin-dev \
+	libpurple \
 	libwebp-dev \
-    && mkdir /bitlbee-src && cd /bitlbee-src \
+    && mkdir /root/bitlbee-src && cd /root/bitlbee-src \
     && curl -fsSL "http://get.bitlbee.org/src/bitlbee-${BITLBEE_VERSION}.tar.gz" -o bitlbee.tar.gz \
     && tar -zxf bitlbee.tar.gz --strip-components=1 \
     && mkdir /bitlbee-data \
@@ -39,52 +40,48 @@ RUN set -x \
     && make install-dev \
     && make install-etc \
     && cd /root \
-    && git clone https://github.com/jgeboski/bitlbee-facebook.git \
+    && git clone -n https://github.com/jgeboski/bitlbee-facebook \
     && cd bitlbee-facebook \
+    && git checkout ${FACEBOOK_COMMIT} \
     && ./autogen.sh \
     && make \
     && make install \
     && cd /root \
-    && git clone https://github.com/sm00th/bitlbee-discord \
+    && git clone -n https://github.com/sm00th/bitlbee-discord \
     && cd /root/bitlbee-discord \
+    && git checkout ${DISCORD_COMMIT} \
     && ./autogen.sh \
     && ./configure \
     && make \
     && make install \
     && cd /root \
-    && git clone --recursive https://github.com/majn/telegram-purple \
+    && git clone -n https://github.com/majn/telegram-purple \
     && cd /root/telegram-purple \
+    && git checkout ${TELEGRAM_COMMIT} \
+    && git submodule update --init --recursive \
     && ./configure \
+    && make \
+    && make install \
+    && cd /root \
+    && git clone -n https://github.com/EionRobb/skype4pidgin \
+    && cd skype4pidgin \
+    && git checkout ${SKYPE_COMMIT} \
+    && cd skypeweb \
     && make \
     && make install \
     && apk del --purge build-dependencies \
-	autoconf \
-	automake \
-	libtool \
-	json-glib \
-	json-glib-dev \
-	libgcrypt-dev \
-	glib-dev \
-	gnutls-dev \
-	file \
-	pidgin-dev \
-	libwebp-dev \
-    && rm -rf /bitlbee-src \
-    && rm -rf /root/bitlbee-facebook \
-    && rm -rf /root/bitlbee-discord \
-    && rm -rf /root/telegram-purple \
-    && rm -rf /src; exit 0
+    && rm -rf /root/* \
+    && rm -rf /var/cache/apk/*; exit 0
 
-
-# Add our users for ZNC
+# Add our users for BitlBee
 RUN adduser -u 1000 -S bitlbee
 RUN addgroup -g 1000 -S bitlbee
 
-
-#Change ownership as needed
+# Change ownership as needed
 RUN chown -R bitlbee:bitlbee /bitlbee-data
 RUN touch /var/run/bitlbee.pid && chown bitlbee:bitlbee /var/run/bitlbee.pid
-#The user that we enter the container as, and that everything runs as
+
+# The user that we enter the container as, and that everything runs as
 USER bitlbee
 VOLUME /bitlbee-data
 ENV BUILD 0.3.0
