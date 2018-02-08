@@ -2,10 +2,10 @@ FROM alpine:latest
 LABEL maintainer=stevesbrain
 
 ENV BITLBEE_COMMIT 4a9c6b0
-ENV FACEBOOK_COMMIT 553593d
 ENV DISCORD_COMMIT 0a84f9d
-ENV TELEGRAM_COMMIT 94dd3be
+ENV FACEBOOK_COMMIT 553593d
 ENV SKYPE_COMMIT c442007
+ENV TELEGRAM_COMMIT 94dd3be
 
 RUN set -x \
     && apk update \
@@ -37,6 +37,14 @@ RUN set -x \
     && make install-dev \
     && make install-etc \
     && cd /root \
+    && git clone -n https://github.com/sm00th/bitlbee-discord \
+    && cd bitlbee-discord \
+    && git checkout ${DISCORD_COMMIT} \
+    && ./autogen.sh \
+    && ./configure \
+    && make \
+    && make install \
+    && cd /root \
     && git clone -n https://github.com/jgeboski/bitlbee-facebook \
     && cd bitlbee-facebook \
     && git checkout ${FACEBOOK_COMMIT} \
@@ -44,26 +52,18 @@ RUN set -x \
     && make \
     && make install \
     && cd /root \
-    && git clone -n https://github.com/sm00th/bitlbee-discord \
-    && cd /root/bitlbee-discord \
-    && git checkout ${DISCORD_COMMIT} \
-    && ./autogen.sh \
-    && ./configure \
-    && make \
-    && make install \
-    && cd /root \
-    && git clone -n https://github.com/majn/telegram-purple \
-    && cd /root/telegram-purple \
-    && git checkout ${TELEGRAM_COMMIT} \
-    && git submodule update --init --recursive \
-    && ./configure \
-    && make \
-    && make install \
-    && cd /root \
     && git clone -n https://github.com/EionRobb/skype4pidgin \
     && cd skype4pidgin \
     && git checkout ${SKYPE_COMMIT} \
     && cd skypeweb \
+    && make \
+    && make install \
+    && cd /root \
+    && git clone -n https://github.com/majn/telegram-purple \
+    && cd telegram-purple \
+    && git checkout ${TELEGRAM_COMMIT} \
+    && git submodule update --init --recursive \
+    && ./configure \
     && make \
     && make install \
     && apk del --purge build-dependencies \
