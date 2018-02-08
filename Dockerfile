@@ -16,20 +16,21 @@ RUN set -x \
     && apk update \
     && apk upgrade \
     && apk add --virtual build-dependencies \
-	curl \
-	build-base \
-	git \
 	autoconf \
 	automake \
+	build-base \
+	curl \
+	git \
+	json-glib-dev \
 	libtool \
     && apk add --virtual runtime-dependencies \
-	json-glib-dev \
-	libgcrypt-dev \
-	gnutls-dev \
 	glib-dev \
-	pidgin-dev \
+	gnutls-dev \
+	json-glib \
+	libgcrypt-dev \
 	libpurple \
 	libwebp-dev \
+	pidgin-dev \
     && mkdir /root/bitlbee-src && cd /root/bitlbee-src \
     && curl -fsSL "http://get.bitlbee.org/src/bitlbee-${BITLBEE_VERSION}.tar.gz" -o bitlbee.tar.gz \
     && tar -zxf bitlbee.tar.gz --strip-components=1 \
