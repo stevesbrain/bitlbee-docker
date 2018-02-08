@@ -1,5 +1,5 @@
 bitlbee:
-  image: 'vanityshed/bitlbee-alpine-plugins:latest'
+  image: 'vanityshed/bitlbee-alpine-plugins:stable'
   restart: always
 
   ports:
