@@ -7,7 +7,6 @@ ENV DISCORD_COMMIT 0a84f9d
 ENV TELEGRAM_COMMIT 94dd3be
 ENV SKYPE_COMMIT c442007
 
-# Build BitlBee and plugins
 RUN set -x \
     && apk update \
     && apk upgrade \
@@ -68,17 +67,13 @@ RUN set -x \
     && make install \
     && apk del --purge build-dependencies \
     && rm -rf /root/* \
-    && rm -rf /var/cache/apk/*; exit 0
+    && rm -rf /var/cache/apk/* \
+    && adduser -u 1000 -S bitlbee \
+    && addgroup -g 1000 -S bitlbee \
+    && chown -R bitlbee:bitlbee /bitlbee-data \
+    && touch /var/run/bitlbee.pid \
+    && chown bitlbee:bitlbee /var/run/bitlbee.pid; exit 0
 
-# Add our users for BitlBee
-RUN adduser -u 1000 -S bitlbee
-RUN addgroup -g 1000 -S bitlbee
-
-# Change ownership as needed
-RUN chown -R bitlbee:bitlbee /bitlbee-data
-RUN touch /var/run/bitlbee.pid && chown bitlbee:bitlbee /var/run/bitlbee.pid
-
-# The user that we enter the container as, and that everything runs as
 USER bitlbee
 VOLUME /bitlbee-data
 ENTRYPOINT ["/usr/local/sbin/bitlbee", "-F", "-n", "-d", "/bitlbee-data"]
