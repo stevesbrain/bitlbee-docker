@@ -1,13 +1,27 @@
-# Bitlbee on Alpine with Plugins
+## BitlBee on Alpine with Plugins
+![Docker Pulls](https://img.shields.io/docker/pulls/vanityshed/bitlbee-alpine-plugins.svg)
 ![Docker Stars](https://img.shields.io/docker/stars/vanityshed/bitlbee-alpine-plugins.svg)
-![Docker PUlls](https://img.shields.io/docker/pulls/vanityshed/bitlbee-alpine-plugins.svg)
 
-Bitlbee 3.5.1 running on the latest Docker Alpine (currently version 3.7), including a variety of plugins:
-
-* [Facebook Chat](https://github.com/jgeboski/bitlbee-facebook)
+Minimal build of latest BitlBee on latest Alpine with latest plugins for:
 * [Discord](https://github.com/sm00th/bitlbee-discord)
+* [Facebook](https://github.com/jgeboski/bitlbee-facebook)
+* [Skype](https://github.com/EionRobb/skype4pidgin)
 * [Telegram](https://github.com/majn/telegram-purple)
-* [SkypeWeb](https://github.com/EionRobb/skype4pidgin)
 
+## Typical Usage
 
-Expects /opt/dockerdata/bitlbee for persistence if using docker-compose file
+For configuration persistance, `/opt/dockerdata/bitlbee` should be present on the host with sufficient permissions.
+
+##### Using Docker CLI
+```
+docker run -d --name bitlbee --restart=always \
+-v /opt/dockerdata/bitlbee:/bitlbee-data:rw \
+-v /etc/localtime:/etc/localtime:ro \
+-p 6667:6667 \
+vanityshed/bitlbee-alpine-plugins
+```
+
+##### Using Docker Compose
+```
+docker-compose -d up
+```
