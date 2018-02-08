@@ -1,7 +1,7 @@
 FROM alpine:latest
 LABEL maintainer=stevesbrain
 
-ENV BITLBEE_VERSION 3.5.1
+ENV BITLBEE_COMMIT 4a9c6b0
 ENV FACEBOOK_COMMIT 553593d
 ENV DISCORD_COMMIT 0a84f9d
 ENV TELEGRAM_COMMIT 94dd3be
@@ -26,9 +26,10 @@ RUN set -x \
 	libpurple \
 	libwebp-dev \
 	pidgin-dev \
-    && mkdir /root/bitlbee-src && cd /root/bitlbee-src \
-    && curl -fsSL "http://get.bitlbee.org/src/bitlbee-${BITLBEE_VERSION}.tar.gz" -o bitlbee.tar.gz \
-    && tar -zxf bitlbee.tar.gz --strip-components=1 \
+    && cd /root \
+    && git clone -n https://github.com/bitlbee/bitlbee \
+    && cd bitlbee \
+    && git checkout ${BITLBEE_COMMIT} \
     && mkdir /bitlbee-data \
     && ./configure --purple=1 --config=/bitlbee-data \
     && make \
