@@ -1,9 +1,5 @@
 FROM alpine:latest
-MAINTAINER Stevesbrain
-ARG BUILD_DATE
-ARG VERSION
-LABEL build_version="stevesbrain version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-ARG CONFIGUREFLAGS="--purple=1 --config=/bitlbee-data"
+LABEL maintainer=stevesbrain
 
 ENV BITLBEE_VERSION 3.5.1
 ENV FACEBOOK_COMMIT 553593d
@@ -35,7 +31,7 @@ RUN set -x \
     && curl -fsSL "http://get.bitlbee.org/src/bitlbee-${BITLBEE_VERSION}.tar.gz" -o bitlbee.tar.gz \
     && tar -zxf bitlbee.tar.gz --strip-components=1 \
     && mkdir /bitlbee-data \
-    && ./configure ${CONFIGUREFLAGS} \
+    && ./configure --purple=1 --config=/bitlbee-data \
     && make \
     && make install \
     && make install-dev \
@@ -85,5 +81,4 @@ RUN touch /var/run/bitlbee.pid && chown bitlbee:bitlbee /var/run/bitlbee.pid
 # The user that we enter the container as, and that everything runs as
 USER bitlbee
 VOLUME /bitlbee-data
-ENV BUILD 0.3.0
 ENTRYPOINT ["/usr/local/sbin/bitlbee", "-F", "-n", "-d", "/bitlbee-data"]
