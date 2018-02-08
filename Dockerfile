@@ -5,6 +5,7 @@ ENV BITLBEE_VERSION 3.5.1
 ENV DISCORD_COMMIT 3e435b0
 ENV FACEBOOK_COMMIT bc52372
 ENV SKYPE_COMMIT a2c5b71
+ENV STEAM_COMMIT 7fc8129
 ENV TELEGRAM_COMMIT 065e0b7
 
 RUN set -x \
@@ -57,6 +58,13 @@ RUN set -x \
     && cd skype4pidgin \
     && git checkout ${SKYPE_COMMIT} \
     && cd skypeweb \
+    && make \
+    && make install \
+    && cd /root \
+    && git clone -n https://github.com/bitlbee/bitlbee-steam \
+    && cd bitlbee-steam \
+    && git checkout ${STEAM_COMMIT} \
+    && ./autogen.sh \
     && make \
     && make install \
     && cd /root \
