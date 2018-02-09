@@ -69,7 +69,7 @@ RUN set -x \
     && make install \
     && cd /root \
     && git clone -n https://github.com/majn/telegram-purple \
-    && cd /telegram-purple \
+    && cd telegram-purple \
     && git checkout ${TELEGRAM_COMMIT} \
     && git submodule update --init --recursive \
     && ./configure \
