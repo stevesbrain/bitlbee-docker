@@ -24,5 +24,5 @@ vanityshed/bitlbee-alpine-plugins
 
 ##### Using Docker Compose
 ```
-docker-compose -d up
+docker-compose up -d
 ```
