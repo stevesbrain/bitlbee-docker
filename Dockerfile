@@ -40,7 +40,7 @@ RUN set -x \
     && make install-etc \
     && cd /root \
     && git clone -n https://github.com/sm00th/bitlbee-discord \
-    && cd /bitlbee-discord \
+    && cd bitlbee-discord \
     && git checkout ${DISCORD_COMMIT} \
     && ./autogen.sh \
     && ./configure \
