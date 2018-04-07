@@ -5,6 +5,7 @@ ENV BITLBEE_COMMIT 4a9c6b0
 ENV DISCORD_COMMIT 0a84f9d
 ENV FACEBOOK_COMMIT 553593d
 ENV SKYPE_COMMIT c442007
+ENV SLACK_COMMIT b0f1550
 ENV STEAM_COMMIT a6444d2
 ENV TELEGRAM_COMMIT 94dd3be
 
@@ -57,6 +58,12 @@ RUN set -x \
     && cd skype4pidgin \
     && git checkout ${SKYPE_COMMIT} \
     && cd skypeweb \
+    && make \
+    && make install \
+    && cd /root \
+    && git clone -n https://github.com/dylex/slack-libpurple \
+    && cd slack-libpurple \
+    && git checkout ${SLACK_COMMIT} \
     && make \
     && make install \
     && cd /root \
