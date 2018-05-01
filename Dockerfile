@@ -1,5 +1,6 @@
 FROM alpine:latest
 LABEL maintainer=stevesbrain
+LABEL maintainer=realies
 
 ENV BITLBEE_COMMIT 246b98b
 ENV DISCORD_COMMIT 020fe0f
