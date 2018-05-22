@@ -8,6 +8,7 @@ ENV SKYPE_COMMIT c395028
 ENV SLACK_COMMIT b0f1550
 ENV STEAM_COMMIT a6444d2
 ENV TELEGRAM_COMMIT 94dd3be
+ENV STRIP true
 
 RUN set -x \
 	&& apk update \
@@ -34,7 +35,8 @@ RUN cd /root \
 	&& cp bitlbee / \
 	&& make install \
 	&& make install-dev \
-	&& make install-etc
+	&& make install-etc \
+	&& if [ "$STRIP" == "true" ]; then strip /usr/local/sbin/bitlbee; fi
 
 FROM builder as facebook-builder
 RUN cd /root \
@@ -43,7 +45,8 @@ RUN cd /root \
 	&& git checkout ${FACEBOOK_COMMIT} \
 	&& ./autogen.sh \
 	&& make \
-	&& make install
+	&& make install \
+	&& if [ "$STRIP" == "true" ]; then strip /usr/local/lib/bitlbee/facebook.so; fi
 
 FROM builder as discord-builder
 RUN cd /root \
@@ -53,7 +56,8 @@ RUN cd /root \
 	&& ./autogen.sh \
 	&& ./configure \
 	&& make \
-	&& make install
+	&& make install \
+	&& if [ "$STRIP" == "true" ]; then strip /usr/local/lib/bitlbee/discord.so; fi
 
 FROM builder as skype-builder
 RUN cd /root \
@@ -62,7 +66,8 @@ RUN cd /root \
 	&& git checkout ${SKYPE_COMMIT} \
 	&& cd skypeweb \
 	&& make \
-	&& make install
+	&& make install \
+	&& if [ "$STRIP" == "true" ]; then strip /usr/lib/purple-2/libskypeweb.so; fi
 
 FROM builder as slack-builder
 RUN cd /root \
@@ -73,7 +78,8 @@ RUN cd /root \
 	&& mkdir -p /usr/share/pixmaps/pidgin/protocols/16/ \
 	&& mkdir -p /usr/share/pixmaps/pidgin/protocols/22/ \
 	&& mkdir -p /usr/share/pixmaps/pidgin/protocols/48/ \
-	&& make install
+	&& make install \
+	&& if [ "$STRIP" == "true" ]; then strip /usr/lib/purple-2/libslack.so; fi
 
 FROM builder as steam-builder
 RUN cd /root \
@@ -82,7 +88,8 @@ RUN cd /root \
 	&& git checkout ${STEAM_COMMIT} \
 	&& ./autogen.sh \
 	&& make \
-	&& make install
+	&& make install \
+	&& if [ "$STRIP" == "true" ]; then strip /usr/local/lib/bitlbee/steam.so; fi
 
 FROM builder as telegram-builder
 RUN cd /root \
@@ -92,7 +99,8 @@ RUN cd /root \
 	&& git submodule update --init --recursive \
 	&& ./configure \
 	&& make \
-	&& make install
+	&& make install \
+	&& if [ "$STRIP" == "true" ]; then strip /usr/lib/purple-2/telegram-purple.so; fi
 
 FROM alpine:latest
 LABEL maintainer=stevesbrain,realies
@@ -120,6 +128,7 @@ COPY --from=discord-builder /usr/local/share/bitlbee/discord-help.txt /usr/local
 
 COPY --from=skype-builder /usr/lib/purple-2/libskypeweb.so /usr/lib/purple-2/libskypeweb.so
 COPY --from=skype-builder /usr/share/pixmaps/pidgin/emotes/skype/theme /usr/share/pixmaps/pidgin/emotes/skype/theme
+# don't copy pixmaps. these are not needed for bitlbee
 # COPY --from=skype-builder /usr/share/pixmaps/pidgin/protocols/16/skype* /usr/share/pixmaps/pidgin/protocols/16/
 # COPY --from=skype-builder /usr/share/pixmaps/pidgin/protocols/22/skype* /usr/share/pixmaps/pidgin/protocols/22/
 # COPY --from=skype-builder /usr/share/pixmaps/pidgin/protocols/48/skype* /usr/share/pixmaps/pidgin/protocols/48/
