@@ -23,6 +23,7 @@ RUN set -x \
 	glib-dev \
 	gnutls-dev \
 	json-glib \
+	libotr-dev \
 	libgcrypt-dev \
 	libpurple \
 	libwebp-dev \
@@ -33,7 +34,7 @@ RUN set -x \
     && curl -fsSL "http://get.bitlbee.org/src/bitlbee-${BITLBEE_VERSION}.tar.gz" -o bitlbee.tar.gz \
     && tar -zxf bitlbee.tar.gz --strip-components=1 \
     && mkdir /bitlbee-data \
-    && ./configure --purple=1 --config=/bitlbee-data \
+    && ./configure --debug=0 --otr=1 --purple=1 --config=/bitlbee-data \
     && make \
     && make install \
     && make install-dev \
