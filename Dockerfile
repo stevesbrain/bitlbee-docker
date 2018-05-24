@@ -35,7 +35,7 @@ RUN set -x \
     && git checkout ${BITLBEE_COMMIT} \
     && mkdir /bitlbee-data \
     && ./configure --debug=0 --otr=1 --purple=1 --config=/bitlbee-data \
-    && make \
+    && make -j \
     && make install \
     && make install-dev \
     && make install-etc \
@@ -45,34 +45,34 @@ RUN set -x \
     && git checkout ${DISCORD_COMMIT} \
     && ./autogen.sh \
     && ./configure \
-    && make \
+    && make -j \
     && make install \
     && cd /root \
     && git clone -n https://github.com/jgeboski/bitlbee-facebook \
     && cd bitlbee-facebook \
     && git checkout ${FACEBOOK_COMMIT} \
     && ./autogen.sh \
-    && make \
+    && make -j \
     && make install \
     && cd /root \
     && git clone -n https://github.com/EionRobb/skype4pidgin \
     && cd skype4pidgin \
     && git checkout ${SKYPE_COMMIT} \
     && cd skypeweb \
-    && make \
+    && make -j \
     && make install \
     && cd /root \
     && git clone -n https://github.com/dylex/slack-libpurple \
     && cd slack-libpurple \
     && git checkout ${SLACK_COMMIT} \
-    && make \
+    && make -j \
     && make install \
     && cd /root \
     && git clone -n https://github.com/bitlbee/bitlbee-steam \
     && cd bitlbee-steam \
     && git checkout ${STEAM_COMMIT} \
     && ./autogen.sh \
-    && make \
+    && make -j \
     && make install \
     && cd /root \
     && git clone -n https://github.com/majn/telegram-purple \
@@ -80,7 +80,7 @@ RUN set -x \
     && git checkout ${TELEGRAM_COMMIT} \
     && git submodule update --init --recursive \
     && ./configure \
-    && make \
+    && make -j \
     && make install \
     && apk del --purge build-dependencies \
     && rm -rf /root/* \
