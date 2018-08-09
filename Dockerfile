@@ -1,13 +1,14 @@
 FROM alpine:latest as builder
 LABEL maintainer=stevesbrain,realies
 
-ENV BITLBEE_COMMIT 246b98b
-ENV DISCORD_COMMIT 020fe0f
+ENV BITLBEE_COMMIT 921ea8b
+ENV DISCORD_COMMIT fd8213f
 ENV FACEBOOK_COMMIT 553593d
-ENV SKYPE_COMMIT c395028
-ENV SLACK_COMMIT b0f1550
+ENV SKYPE_COMMIT 2290013
+ENV SLACK_COMMIT 6ce21a1
 ENV STEAM_COMMIT a6444d2
-ENV TELEGRAM_COMMIT 94dd3be
+ENV TELEGRAM_COMMIT f686f8a
+
 ENV STRIP true
 
 RUN set -x \
@@ -38,16 +39,6 @@ RUN cd /root \
 	&& make install-etc \
 	&& if [ "$STRIP" == "true" ]; then strip /usr/local/sbin/bitlbee; fi
 
-FROM builder as facebook-builder
-RUN cd /root \
-	&& git clone -n https://github.com/jgeboski/bitlbee-facebook \
-	&& cd bitlbee-facebook \
-	&& git checkout ${FACEBOOK_COMMIT} \
-	&& ./autogen.sh \
-	&& make \
-	&& make install \
-	&& if [ "$STRIP" == "true" ]; then strip /usr/local/lib/bitlbee/facebook.so; fi
-
 FROM builder as discord-builder
 RUN cd /root \
 	&& git clone -n https://github.com/sm00th/bitlbee-discord \
@@ -58,6 +49,17 @@ RUN cd /root \
 	&& make \
 	&& make install \
 	&& if [ "$STRIP" == "true" ]; then strip /usr/local/lib/bitlbee/discord.so; fi
+
+FROM builder as facebook-builder
+RUN cd /root \
+	&& git clone -n https://github.com/jgeboski/bitlbee-facebook \
+	&& cd bitlbee-facebook \
+	&& git checkout ${FACEBOOK_COMMIT} \
+	&& ./autogen.sh \
+	&& make \
+	&& make install \
+	&& if [ "$STRIP" == "true" ]; then strip /usr/local/lib/bitlbee/facebook.so; fi
+
 
 FROM builder as skype-builder
 RUN cd /root \
@@ -112,6 +114,9 @@ RUN apk add glib \
 	json-glib \
 	libgcrypt \
 	libpurple \
+	libpurple-bonjour \
+	libpurple-oscar \
+	libpurple-xmpp \
 	libwebp \
 	pidgin \
 	&& adduser -u 1000 -S bitlbee \
@@ -121,10 +126,16 @@ RUN apk add glib \
 	&& touch /var/run/bitlbee.pid \
 	&& chown bitlbee:bitlbee /var/run/bitlbee.pid
 
-COPY --from=facebook-builder /usr/local/lib/bitlbee/facebook.* /usr/local/lib/bitlbee/
+COPY --from=builder /usr/local/etc/bitlbee/ /usr/local/etc/bitlbee/
+COPY --from=builder /usr/local/include/bitlbee/ /usr/local/include/bitlbee/
+COPY --from=builder /usr/local/lib/pkgconfig/bitlbee.pc /usr/local/lib/pkgconfig/bitlbee.pc
+COPY --from=builder /usr/local/sbin/bitlbee /usr/local/sbin/bitlbee
+COPY --from=builder /usr/local/share/bitlbee/help.txt /usr/local/share/bitlbee/help.txt
 
 COPY --from=discord-builder /usr/local/lib/bitlbee/discord.* /usr/local/lib/bitlbee/
 COPY --from=discord-builder /usr/local/share/bitlbee/discord-help.txt /usr/local/share/bitlbee/discord-help.txt
+
+COPY --from=facebook-builder /usr/local/lib/bitlbee/facebook.* /usr/local/lib/bitlbee/
 
 COPY --from=skype-builder /usr/lib/purple-2/libskypeweb.so /usr/lib/purple-2/libskypeweb.so
 COPY --from=skype-builder /usr/share/pixmaps/pidgin/emotes/skype/theme /usr/share/pixmaps/pidgin/emotes/skype/theme
@@ -142,12 +153,6 @@ COPY --from=steam-builder /usr/local/lib/bitlbee/steam.* /usr/local/lib/bitlbee/
 
 COPY --from=telegram-builder /etc/telegram-purple/server.tglpub /etc/telegram-purple/server.tglpub
 COPY --from=telegram-builder /usr/lib/purple-2/telegram-purple.so /usr/lib/purple-2/telegram-purple.so
-
-COPY --from=builder /usr/local/etc/bitlbee/ /usr/local/etc/bitlbee/
-COPY --from=builder /usr/local/include/bitlbee/ /usr/local/include/bitlbee/
-COPY --from=builder /usr/local/lib/pkgconfig/bitlbee.pc /usr/local/lib/pkgconfig/bitlbee.pc
-COPY --from=builder /usr/local/sbin/bitlbee /usr/local/sbin/bitlbee
-COPY --from=builder /usr/local/share/bitlbee/help.txt /usr/local/share/bitlbee/help.txt
 
 USER bitlbee
 VOLUME /bitlbee-data
