@@ -3,12 +3,15 @@
 ![Docker Stars](https://img.shields.io/docker/stars/vanityshed/bitlbee-alpine-plugins.svg)
 
 Minimal build of latest BitlBee on latest Alpine with latest plugins for:
+* [Bonjour](https://pkgs.alpinelinux.org/package/v3.8/community/x86_64/libpurple-bonjour)
 * [Discord](https://github.com/sm00th/bitlbee-discord)
 * [Facebook](https://github.com/jgeboski/bitlbee-facebook)
+* [ICQ](https://pkgs.alpinelinux.org/package/v3.8/community/x86_64/libpurple-oscar)
 * [Skype](https://github.com/EionRobb/skype4pidgin)
 * [Slack](https://github.com/dylex/slack-libpurple)
 * [Steam](https://github.com/bitlbee/bitlbee-steam)
 * [Telegram](https://github.com/majn/telegram-purple)
+* [XMPP (Jabber)](https://pkgs.alpinelinux.org/package/v3.8/community/x86_64/libpurple-xmpp)
 
 ## Typical Usage
 
